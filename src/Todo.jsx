@@ -28,7 +28,8 @@ function Todo() {
 
     const addTodo = useCallback(() => {
         if (todo !== "" && todo.trim() !== "") {
-            setTodolist((prev)=>[...prev, todo])
+            let newTodo = { name: todo, id: todolist.length + 1 }
+            setTodolist((prev)=>[...prev, newTodo])
             setTodo("");
             messageApi.open({
                 type: 'success',
@@ -100,10 +101,10 @@ function Todo() {
     })
     
   return (
-    <>
+    <div className='mx-4 sm:mx-20'>
         {contextHolder}
         <Spin spinning={isloading} tip="Loading..." fullscreen />
-        <h1 className='text-center font-medium  sm:text-lg lg:text-3xl'>
+        <h1 className='text-center font-medium  text-2xl lg:text-3xl my-2'>
             To-Do List
         </h1>
         <div className='flex justify-center items-center my-2'>
@@ -139,7 +140,7 @@ function Todo() {
         
 
 
-    </>
+    </div>
   )
 }
 
