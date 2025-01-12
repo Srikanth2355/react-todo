@@ -2,25 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Input, Button, Empty,message, Card, Modal, Popconfirm, Spin ,Divider     } from 'antd';
 import {  DeleteFilled, EditFilled , CheckCircleOutlined } from '@ant-design/icons';
 import moment from "moment";
+import  useLocalStorage  from './localStoragehook';
 
 function Todo() {
     const { TextArea } = Input;
     const [todo, setTodo] = useState("")
-    const [todolist, setTodolist] = useState([
-        {
-            id:1,
-            todo:"todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1",
-            createdAt:new Date(),
-            completed:false,
-            completedAt:'',
-        },
-        {
-            id:2,
-            todo:"todo2",
-            createdAt:new Date(),
-            completed:true,
-            completedAt:new Date(),
-        }])
+    const [todolist, setTodolist] = useLocalStorage("tododata", [])
     const [messageApi, contextHolder] = message.useMessage();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [edittodo, setEdittodo] = useState({});
@@ -58,7 +45,7 @@ function Todo() {
     })
 
     const handleDelete =useCallback((item) => () => {
-        let todos = todolist
+        let todos = [...todolist]
         let index = todos.findIndex((todo) => todo.id === item.id)
         if(index == -1){
             messageApi.open({
@@ -76,7 +63,7 @@ function Todo() {
     })
 
     const handleEdit = useCallback(() => {
-        let todos = todolist
+        let todos = [...todolist]
         if (edittodo.todo == "" || edittodo.todo.trim() == "") {
             messageApi.open({
                 type: 'error',
@@ -153,7 +140,6 @@ function Todo() {
                                         <DeleteFilled key="delete" style={{ color: 'red' ,fontSize:"20px" }}  />
                                         {/* onClick={openDeleteConfirmPopup(item)} */}
                                     </Popconfirm>
-
                                 </div>
                             </div>
                         </div>
