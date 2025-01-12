@@ -1,5 +1,6 @@
 body {
   background-color: #F7F7F7;
+  margin-bottom: 10px !important;
 }
 
 .cutomcard >.ant-card-body {
@@ -8,4 +9,11 @@ body {
   padding-bottom: 5px !important;
   padding-top: 15px !important;
   height: 100% !important;
+}
+
+.clearicon > .ant-input-suffix > .ant-input-clear-icon {
+  font-size: 20px !important;
+  position: absolute !important;
+  top:50% !important;
+  transform: translateY(-50%)
 }
