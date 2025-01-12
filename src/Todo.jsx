@@ -3,6 +3,7 @@ import { Input, Button, Empty,message, Card, Modal, Popconfirm, Spin ,Divider   
 import {  DeleteFilled, EditFilled , CheckCircleOutlined } from '@ant-design/icons';
 import moment from "moment";
 import  useLocalStorage  from './localStoragehook';
+import { v4 as uuidv4 } from 'uuid';
 
 function Todo() {
     const { TextArea } = Input;
@@ -16,7 +17,13 @@ function Todo() {
 
     const addTodo = useCallback(() => {
         if (todo !== "" && todo.trim() !== "") {
-            let newTodo = { todo: todo, id: todolist.length + 1, createdAt: new Date(), comleted: false, completedAt: '' }
+            let newTodo = { 
+                todo: todo, 
+                id: uuidv4(), 
+                createdAt: new Date(), 
+                comleted: false, 
+                completedAt: '' 
+            }
             setTodolist((prev)=>[...prev, newTodo])
             setTodo("");
             messageApi.open({
