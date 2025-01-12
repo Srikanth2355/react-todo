@@ -1,34 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Input, Button, Empty,message, Card, Modal, Popconfirm, Spin     } from 'antd';
+import { Input, Button, Empty,message, Card, Modal, Popconfirm, Spin ,Divider     } from 'antd';
 import {  DeleteFilled, EditFilled , CheckCircleOutlined } from '@ant-design/icons';
+import moment from "moment";
 
 function Todo() {
     const { TextArea } = Input;
     const [todo, setTodo] = useState("")
-    const [todolist, setTodolist] = useState([{name:"todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1",id:1},{name:"todo2",id:2}])
+    const [todolist, setTodolist] = useState([
+        {
+            id:1,
+            todo:"todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1 todo1 todo1 todo1 todo1todo1 todo1 todo1 todo1",
+            createdAt:new Date(),
+            completed:false,
+            completedAt:'',
+        },
+        {
+            id:2,
+            todo:"todo2",
+            createdAt:new Date(),
+            completed:true,
+            completedAt:new Date(),
+        }])
     const [messageApi, contextHolder] = message.useMessage();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [edittodo, setEdittodo] = useState({});
     const [isloading, setIsloading] = useState(false);
-    const actions = (item)=> [
-            <EditFilled key="edit" style={{ color: 'gray' ,fontSize:"20px" }} onClick={openEditModal(item)} />,
-            <CheckCircleOutlined key="check" style={{ color: 'green' ,fontSize:"20px" }} onClick={handleComplete(item)}  />,
-            <Popconfirm
-                title="Delete Task"
-                description="Are you sure to delete this Todo?"
-                onConfirm={handleDelete(item)}
-                onCancel={()=>{}}
-                okText="Yes"
-                cancelText="No"
-            >
-                <DeleteFilled key="delete" style={{ color: 'red' ,fontSize:"20px" }}  />
-                {/* onClick={openDeleteConfirmPopup(item)} */}
-            </Popconfirm>
-    ]
+   
 
     const addTodo = useCallback(() => {
         if (todo !== "" && todo.trim() !== "") {
-            let newTodo = { name: todo, id: todolist.length + 1 }
+            let newTodo = { todo: todo, id: todolist.length + 1, createdAt: new Date(), comleted: false, completedAt: '' }
             setTodolist((prev)=>[...prev, newTodo])
             setTodo("");
             messageApi.open({
@@ -49,7 +50,7 @@ function Todo() {
             setEdittodo((prev) => item) 
             setIsModalVisible(true)
             setIsloading(false)
-        }, 1000);
+        }, 500);
     })
 
     const handleComplete = useCallback((item) => () => {
@@ -76,7 +77,7 @@ function Todo() {
 
     const handleEdit = useCallback(() => {
         let todos = todolist
-        if (edittodo.name == "" || edittodo.name.trim() == "") {
+        if (edittodo.todo == "" || edittodo.todo.trim() == "") {
             messageApi.open({
                 type: 'error',
                 content: 'Please enter a todo',
@@ -123,10 +124,39 @@ function Todo() {
                 {todolist.map((item, index) => (
                     <Card 
                      key={index} 
-                     className='pt-3 text-justify flex flex-col justify-between'
-                     actions={actions(item)} >
-                        <p>{item.name}</p>
-    
+                     className='pt-3  cutomcard'
+                     hoverable={true}
+                     >
+                        <div className='flex flex-col justify-between h-full'>
+                            <p className='text-justify px-6'>{item.todo}</p>
+                            <div>
+                                <div className='flex flex-col my-2 px-6'>
+                                    <p className=' '> <span className='font-semibold'>CreatedAt : </span>{moment(item.createdAt).format("MMM D YYYY, h:mm A")}</p>
+                                    {item.completed?(
+                                        <p className=''><span className='font-semibold'>CompletedAt : </span>{moment(item.completedAt).format("MMM D YYYY, h:mm A")}</p>):('')
+                                    }
+                                </div>
+                                <div className='flex justify-around py-2' style={{borderTopColor:"#0505050f",borderTopWidth:"1px"}}>
+                                    <EditFilled key="edit" style={{ color: 'gray' ,fontSize:"20px" }} onClick={openEditModal(item)} />
+                                    <Divider type="vertical" style={{ height: "30px" }} />
+                                    <CheckCircleOutlined key="check" style={{ color: 'green' ,fontSize:"20px" }} onClick={handleComplete(item)}  />
+                                    <Divider type="vertical" style={{ height: "30px" }} />
+                                    
+                                    <Popconfirm
+                                        title="Delete Task"
+                                        description="Are you sure to delete this Todo?"
+                                        onConfirm={handleDelete(item)}
+                                        onCancel={()=>{}}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <DeleteFilled key="delete" style={{ color: 'red' ,fontSize:"20px" }}  />
+                                        {/* onClick={openDeleteConfirmPopup(item)} */}
+                                    </Popconfirm>
+
+                                </div>
+                            </div>
+                        </div>
                     </Card>
                 ))}
             </div>
@@ -134,7 +164,7 @@ function Todo() {
 
         {/* edit modal */}
         <Modal title="Update Todo" open={isModalVisible} onOk={handleEdit} onCancel={() => setIsModalVisible((prev) => (false))}>
-            <TextArea value={edittodo.name} onChange={(e) => setEdittodo((prev) => ({...prev, name: e.target.value}))} />
+            <TextArea value={edittodo.todo} onChange={(e) => setEdittodo((prev) => ({...prev, todo: e.target.value}))} />
         </Modal>
 
         
