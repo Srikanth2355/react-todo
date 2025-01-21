@@ -201,7 +201,7 @@ function Todo() {
         {contextHolder}
         {showcelebration ? <Confetti
             width={window.innerWidth}
-            height={window.innerHeight}
+            height={window.innerHeight + window.scrollY}
             tweenDuration={3000}
             gravity={0.3}
             numberOfPieces={confettipieces}
